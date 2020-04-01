@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="LaTeX Source Files">
+      <UniqueIdentifier>{eb3671d0-7925-4096-be49-0953ca0f8143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Batch Files">
+      <UniqueIdentifier>{e2f805a5-2242-40d7-9118-bd8cda99643f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\ppc_conc.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_iov0\s_iov0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\recomp.bat">
+      <Filter>Batch Files</Filter>
+    </None>
+    <None Include="..\..\s_cfp0\s_cfp0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_fpa0\s_fpa0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_cco0\s_cco0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_ndv0\s_ndv0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_ghc0\s_ghc0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_csd0\s_csd0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_cmd0\s_cmd0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_bpp0\s_bpp0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_ref0\s_ref0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_ind0\s_ind0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_atq0\s_atq0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+    <None Include="..\..\s_icp0\s_icp0.tex">
+      <Filter>LaTeX Source Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

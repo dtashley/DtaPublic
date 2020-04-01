@@ -1,0 +1,106 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[letterpaper,10pt,titlepage]{article}
+%\usepackage[bitstream-charter]{mathdesign}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[ansinew]{inputenc}
+\usepackage[OT1]{fontenc}
+\usepackage{graphicx}
+\usepackage{makeidx}
+%
+\makeindex{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\title{Practices to Prevent Intermittent Software Defects in Software Targeted for 
+       NXP\textsuperscript{\textregistered}
+       Power Architecture\textsuperscript{\textregistered} Single-Core and 
+	   Multi-Core Microcontrollers
+	   with Green Hills Software\textsuperscript{\textregistered} C/C++ Compilers
+	   under Vector\textsuperscript{\textregistered}
+	   MICROSAR\textsuperscript{\textregistered}}
+\author{\vspace{3cm}\\David T. Ashley\\\texttt{dashley@gmail.com}\\\vspace{3cm}}
+\date{\LaTeX{} Compilation Date: \today{}}
+\maketitle
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\begin{abstract}
+This document describes common causes of intermittent software defects
+in embedded software (some of which are generic to all microcontroller
+software, and some of which require specific hardware features).  Technical
+background about these causes is also provided.
+
+Information about architectural features of the 
+Power Architecture\textsuperscript{\textregistered} family of processors is
+provided, especially as it relates to intermittent software defects and how
+to avoid producing software containing these intermittent software defects.
+
+Information about NXP\textsuperscript{\textregistered} single-core and
+multi-core microcontrollers that incorporate
+Power Architecture\textsuperscript{\textregistered} processor cores is provided,
+especially as it relates to intermittent software defects and how to avoid
+producing software containing these intermittent defects.
+
+Information about C/C++ compilers and the 
+Green Hills Software\textsuperscript{\textregistered} C/C++ compilers
+is provided,
+especially as it relates to intermittent software defects and how to avoid
+producing software containing these intermittent defects.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{roman}
+\tableofcontents{}
+\clearpage{}
+\listoffigures{}
+\listoftables{}
+\clearpage{}
+\pagenumbering{arabic}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Introduction and Overview
+\input{s_iov0/s_iov0.tex}
+
+%Common Features of Processors and Microcontrollers
+\input{s_cfp0/s_cfp0.tex}
+
+%Features of the Power Architecture Family of Processors
+\input{s_fpa0/s_fpa0.tex}
+
+%Features of NXP Single-Core and Multi-Core Microcontrollers that Incorporate
+%Power Architecture Processor Cores
+\input{s_ndv0/s_ndv0.tex}
+
+%Features of the C/C++ Programming Language and Practical Compilers
+\input{s_cco0/s_cco0.tex}
+
+%Features of the Green Hills Software C/C++ Compilers
+\input{s_ghc0/s_ghc0.tex}
+
+%Algorithms and Techniques for Concurrent Programming
+\input{s_atq0/s_atq0.tex}
+
+%Implementation of Concurrent Programming Techniques on NXP Single-Core and
+%Multi-Core Microcontrollers that Incorporate Power Architecture Processor
+%Cores
+\input{s_icp0/s_icp0.tex}
+
+%Common Software Design Patterns
+\input{s_csd0/s_csd0.tex}
+
+%Common Causes and Mechanisms of Intermittent Software Defects
+\input{s_cmd0/s_cmd0.tex}
+
+%Best Practices for the Prevention of Intermittent Software Defects
+\input{s_bpp0/s_bpp0.tex}
+
+%References
+\input{s_ref0/s_ref0.tex}
+
+%Index
+\input{s_ind0/s_ind0.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
