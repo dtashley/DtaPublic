@@ -6,10 +6,103 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction and Overview}
+\section{General Description}
 \label{ciov2:siov0}
 
-TBD.
+The Embedded Tool Set (or EMTS) is a set of open-source software tools
+to support the development of embedded systems.  These software tools run
+on:
+
+\begin{enumerate}
+   \item \emph{Windows}-based personal computers.
+   \item \emph{*nix}-based personal computers.
+   \item \emph{*nix} servers.
+   \item \emph{Android}-based phones/tablets.
+   \item \emph{iOS}-based phones/tablets.
+   \item \emph{FireOS}-based phones/tablets.
+   \item Embedded systems.
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Taxonomy and Naming Conventions}
+\label{ciov2:stnc0}
+
+\begin{itemize}
+   \item Tool Set (TS)
+      \begin{itemize}
+         \item The entire EMTS tool set.
+      \end{itemize}
+   \item Tool Collection (TC)
+      \begin{itemize}
+         \item A set of logical tools that are packaged together into one executable.
+      \end{itemize}
+   \item Tool (TL)
+      \begin{itemize}
+         \item Cohesive functionality that can never be split for
+               the purposes of packaging.
+            \begin{itemize}
+               \item Any TS component component either includes
+                     the TL in its entirety or not at all.
+            \end{itemize}
+         \item Makes its own threading decisions.
+            \begin{itemize}
+               \item In most applications of the TL, it is provided with
+                     threads to use (mechanism TBD).  (It may not create its own.)
+               \item It may use the provided threads as it pleases.
+               \item It must relinquish the threads on loss of focus or other
+                     similar event (mechanism TBD).
+            \end{itemize}
+      \end{itemize}
+   \item Tool Executable (TLE)
+      \begin{itemize}
+         \item An executable containing only a single tool.
+      \end{itemize}
+   \item Tool Script (TSC)
+      \begin{itemize}
+         \item Script component(s) implementing tool functionality.
+         \item Implemented in PHP, Python, Perl, etc.
+      \end{itemize}
+   \item Tool Web Interface (TWI)
+      \begin{itemize}
+         \item Script component(s) that generate the web interface to tool functionality.
+         \item Implemented in PHP, Python, Perl, etc.
+      \end{itemize}
+   \item Tool Function (TF)
+      \begin{itemize}
+         \item An individual function within a tool.
+      \end{itemize}
+   \item Tool Function Executable (TFE)
+      \begin{itemize}
+         \item An executable containing only an individual tool function.
+      \end{itemize}
+   \item Tool Function Script (TFSC)
+      \begin{itemize}
+         \item Script component(s) implementing only an individual tool function.
+         \item Implemented in PHP, Python, Perl, etc.
+      \end{itemize}
+   \item Tool Function Web Interface (TFWI)
+      \begin{itemize}
+         \item Script component(s) that generate the web interface to a tool function.
+         \item Implemented in PHP, Python, Perl, etc.
+      \end{itemize}
+\end{itemize}
+
+Tools and tool functions are packaged within the tool set in 4 ways:
+
+\begin{itemize}
+   \item As built-in functions for a script interpreter.\footnote{The script interpreter
+         interprets a language called Clike, described fully in \S{}TBD.  The interpreter
+         can be used both interactively (in this mode, it might be described as a
+         \emph{very} powerful calculator) and to run scripts (which give programmatic access
+         to all EMTS functionality).}
+   \item As GUI interfaces within executables.
+   \item As stand-alone console-mode executables that implement specific sets of tools or
+         tool functions.
+   \item As functionality implemented on a web page.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
