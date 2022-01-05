@@ -1,0 +1,8 @@
+*.suo
+*.user
+*.sln.docstates
+.vs/
+x64/
+x86/
+build/
+bld/
