@@ -91,14 +91,47 @@ The command file is parsed in the following phases.
     * A hash character that is within a quoted string must be
       escaped, and the hash character escape sequence may not
       occur outside of a quoted string.
-  * The defined escape sequences are:
-    * "\\\\", to specify a backslash that is not part of an
-      escape sequence.
-    * "\\#" to specify a hash character that is not part of a
-      comment.  Any hash character that is within a quoted
-      string must be part of this escape sequence.  this
-      escape sequence may not occur outside of a quoted string.
-    * ' \\" '
+  * Special tokens
+    * These characters are parsed as special tokens, and cannot
+      appear as part of an unquoted string.  They may, however,
+      appear as part of a quoted string.
+      * ":"
+      * "="
+      * ","
+      * ";"
+      * "+"
+      * "*"
+      * "^"
+      * "&"
+      * "|"
+      * "{"
+      * "}"
+      * "["
+      * "]"
+    * The list of special tokens was chosen mostly to avoid
+      characters that commonly occur in filenames.  Note that:
+      * Any backslash characters must be escaped as described below.
+      * Hash characters cannot occur within an unquoted string unless
+        a comment is intended.  A quoted string must be used instead.
+      * The forward slash character ("/"), the underscore character
+        ("_"), the hyphen character ("-"), and parenthesis are
+        not special tokens and don't need to be escaped.
+  * Escape sequences
+    * The defined escape sequences are:
+      * "\\\\" to specify a backslash character that
+        occurs inside or outside a quoted string.  The
+        backslash character is escaped in this way to
+        provide for backwards compatibility in the event
+        that the list of escape sequences is expanded.
+      * "\\ " to specify the space character outside of a
+        quoted string.  This prevents the space character from
+        being interpreted as whitespace and allows the ...
+      * ' \\" ' to specify a double quote character that
+        occurs inside a quoted string.  This escape sequence
+        may not occur outside of a quoted string.
+    * At present, there is no capability to specify other types of
+      characters, as these don't commonly occur in filenames.
+      This capability may be added later.
 
 The hash character ("#") is used to delimit comments. When a hash
 character appears on a line, the rest of the line is ignored.
