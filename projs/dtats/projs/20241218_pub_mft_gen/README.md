@@ -59,8 +59,77 @@ only printable characters, spaces, tabs, carriage returns, and line
 feeds.  The command file may not contains characters with the leading
 bit set (those above 0x7F).
 
-The hash character ('#') is used to delimit comments. When a hash
+The command file is parsed in the following phases.
+* Conditioning of end-of-line sequences.
+  * End-of-line sequences are modified to an internal canonical
+    form.
+  * Any carriage return (decimal value 13) or linefeed (decimal
+    value 10) character is interpreted as part of an
+    end-of-line sequence.
+  * The program tolerates both properly-formatted Windows
+    and properly-formatted Unix end-of-line sequences, even
+    mixed.
+  * The program will tolerate ill-formed end-of-line
+    sequences. The linefeed character (decimal value 10) is used to
+    decide how many end-of-line tokens exist.  So, the sequence
+    13-10-13-13-13-10 (ill-formed) would be treated as two
+    end-of-line tokens.
+* Tokenization
+  * The program reduces the command file to a series of tokens.
+  * As part of the process, comments, quoted strings,
+    escape sequences, and continuation characters are processed.
+  * Comments
+    * A hash character ("#") that is not part of an escape
+      sequence (see below) and not part of a quoted string
+      causes the hash character and the remainder of the line
+      to be discarded, unless the last character of the line
+      is the continuation character, in which case only the
+      continuation character is retained.
+    * This means that comments may be:
+      * Placed on a line alone, preceded by a hash character.
+      * Placed at the end of a line after non-comment material.
+    * A hash character that is within a quoted string must be
+      escaped, and the hash character escape sequence may not
+      occur outside of a quoted string.
+  * The defined escape sequences are:
+    * "\\\\", to specify a backslash that is not part of an
+      escape sequence.
+    * "\\#" to specify a hash character that is not part of a
+      comment.  Any hash character that is within a quoted
+      string must be part of this escape sequence.  this
+      escape sequence may not occur outside of a quoted string.
+    * ' \\" '
+
+The hash character ("#") is used to delimit comments. When a hash
 character appears on a line, the rest of the line is ignored.
+
+The command file is interpreted roughly as a series of whitespace- and
+end-of-line-delimited tokens.  This means that some file names
+and path names might need to be quoted, while others might not.
+
+The tokens recognized are:
+
+* End of line
+* Comment
+  * Any hash character ("#") that is
+* String
+  * Any group
+
+Strings containing spaces or tabs can be identified as a single token
+by delimiting them with the double quote (' " ') character.
+Tokens may not span a line boundary, even when a continuation character
+
+
+The backslash ("\\") is the escape character.  It is used in the
+following ways.
+
+* The backslash character itself can be specified by the escape
+  sequence "\\\\".
+*   
+Strings containing spaces or tabs (in filenames, for example), can
+be delimited using double quotes.  Within a string delimited by
+double quotes, double quotes can be inserted in the string with the
+escape sequence '\\"'.
 
 The backslash character ('\\') is used as a line continuation
 character.  When a backslash character is the last character on a line,
