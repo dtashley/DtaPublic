@@ -56,10 +56,7 @@ same directory level.
 ## Invocation and Command-Line Options
 The program should be invoked using a command line should be of the form:
 
-
-# Left off here editing
-
-*pub_mft_gen [-v] command_file_path*
+*_epub_ref_maintain_ [-v] command_file_path*
 
 * The only supported option is *-v*, which commands extra verbosity.
 * *command_file_path* is a mandatory argument, and is the path to the
@@ -206,6 +203,31 @@ line).
 
 The supported commands are listed below.
 
+* *clear_all_state*<br><br>
+  Clears all internally held data structures, and resets all options
+  and parameters to their default values.<br><br>
+  This command is provided in case multiple overlapping operations
+  need to be performed using the same command file (processing
+  multiple books, for example).<br><br>
+  All internal data structures are cleared and all options and
+  parameters are at their default values when the program is
+  invoked, so this command generally does not need to be used
+  if only one book is being processed.<br><br>
+* *read_source_chapter chapter1file, chapter2file, ... chapterNfile*<br><br>
+  Reads the HTML files as if they were source chapters,
+  in the order specified, and builds
+  internal data structures.  The internal data structures
+  include the association between section numbers, figures,
+  tables, and equations and their alphanumeric labels.<br><br>
+  The order in which files are specified is significant,
+  as the numbering of sections, figures, tables, and equations
+  depends on the order in which these files are read.  Generally,
+  the order of the files specified mirrors the order of chapters
+  in the book.<br><br>
+* *read_bibliography bibfile*<br><br>
+  Reads the bibliography (list of references) to determine
+  what alphanumeric labels exist and what their numbering
+  should be.<br><br>
 * *source_template_file_neaten file1, file2, ..., fileN*<br><br>
   Neatens each of the specified source files.  Neatening consists
   of adjusting whitespace and formatting, and doesn't require any
