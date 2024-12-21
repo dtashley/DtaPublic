@@ -56,11 +56,54 @@ same directory level.
 ## Invocation and Command-Line Options
 The program should be invoked using a command line should be of the form:
 
-*_epub_ref_maintain_ [-v] command_file_path*
+*_epub_ref_maintain_ [-v] epub_path command_file_path*
 
 * The only supported option is *-v*, which commands extra verbosity.
+* *epub_path* is the path to the _ePub_ directory, including the
+  terminating directory path separator.  The _ePub_ directory
+  is the top-level directory containing the _mimetype_
+  file.  This string is prepended to each filename contained
+  in command file commands the specify a file.<br><br>
+  *epub_path* can be either a relative (more common) or absolute
+  (less common) path.  In the case of a relative path, it should be
+  relative to the working directory at the time this program is run.  
 * *command_file_path* is a mandatory argument, and is the path to the
   command file (format described below).
+
+## Program Memory Requirements and Error Terminations
+This program buffers all source content except graphics in memory
+and operates on it there.  The actual memory requirements may be
+several times the combined size of all source content, due to the
+storage of lexical analysis tokens and parsing data structures,
+in addition to storage of the original file.
+
+In practice, this should not be problematic.  A modern personal
+computer should have at least 8 gigabytes of storage available
+for the heap; and a modern personal computer should also employ
+virtual memory.
+
+It is possible, however, for this program to run out of memory.
+If this occurs, the program will terminate and the error will be
+plainly announced.
+
+This program may terminate in the following 4 ways, with the
+return codes listed below.
+
+* *Normal termination (return code 0)*<br>
+  Program executed cleanly, no errors detected.
+* *Out of memory (return code 1)*<br>
+  The heap was exhausted.
+* *Processing error (return code 2)*<br>
+  Undefined references, ill-formatted input, etc.
+  The program makes no attempt at error recovery, as it is assumed
+  that the author using this program wishes to keep the source
+  material in correct form at all times.  Only
+  unused references are warnings; all other anomalies
+  are errors.
+* *Operating system termination (return code unknown)*<br>
+  The program may experience a segmentation fault or
+  otherwise be forcibly terminated by the operating
+  system.  (Hopefully, this would never occur.)
 
 ## Command File Format
 The command file must be a conventionally encoded ASCII text file (no
@@ -201,8 +244,140 @@ one command per line (although continuation characters may be used
 to spread a command and its arguments out over more than one physical
 line).
 
+The general flow of commands within a command file is:
+* Clear state (optional if only one book is being processed).
+* Set parameters and options (modifies subsequent steps).
+* Read files.
+  * Buffers entire file in computer memory.
+  * Lexically analyzes and parses file.
+    * Certain formatting and logical structure errors will be detected.
+  * Calculates numbering of sections, figures, tables, and equations and
+    assigns value to alphanumeric labels.
+  * Records index markings.
+  * Note that certain types of files are processed differently
+    than others.  A preface, for example, does not cause
+    the chapter number to be incremented; whereas a chapter
+    does cause the chapter number to be incremented.
+  * Note that some "read" commands corresponding to fully generated
+    parts of the book do not actually read a file.  They simply
+    reserve space in numbering and in the table of contents.
+* Check references, resolve references.
+  * Internal (computer memory) data structures are examined, and
+    references are checked and resolved.  Errors involving duplicate
+    definitions or undefined references
+    may be detected at this point.
+  * Unused items in the bibliography may be flagged, but a human
+    must remove those if desired.
+* Calculate and write files.
+  * The following files are calculated and written by commands
+    in the command file.
+    * File manifest.
+    * Table of contents (optional).
+    * List of figures (optional).
+    * List of tables (optional).
+    * List of equations (optional).
+    * Preface (optional).
+    * Chapter files.
+    * Index (optional).
+
 The supported commands are listed below.
 
+<table align="center" border="1">
+<tr>
+   <td>
+      <b>Read Command</b>
+   </td>
+   <td>
+      <b>Write Command</b>
+   </td>
+   <td>
+      <b>Attribute</b>
+   </td>
+   <td>
+      <b>Value</b>
+   </td>
+   <td>
+      <b>Description</b>
+   </td>
+</tr>
+<tr>
+   <td rowspan="6">
+      <i>read_manifest_file manifest_file</i>
+   </td>
+   <td rowspan="6">
+      <i>write_manifest_file</i>
+   </td>
+   <td>
+      <b>Multiple Instances Allowed</b>
+   </td>
+   <td>
+      Y
+   </td>
+   <td>
+      <b>Description</b>
+   </td>
+</tr>
+<tr>
+   <td>
+      <b>Path from Read Command Used for Write</b>
+   </td>
+   <td>
+      Y
+   </td>
+   <td>
+      <b>Description</b>
+   </td>
+</tr>
+<tr>
+   <td>
+      <b>Path Matching</b>
+   </td>
+   <td>
+      N
+   </td>
+   <td>
+      <b>Description</b>
+   </td>
+</tr>
+<tr>
+   <td>
+      <b>Read File Ignored</b>
+   </td>
+   <td>
+      N
+   </td>
+   <td>
+      <b>Description</b>
+   </td>
+</tr>
+  <tr>
+     <td>
+        <b>Formatting Cleanup</b>
+     </td>
+     <td>
+        Y
+     </td>
+     <td>
+        <b>Description</b>
+     </td>
+  </tr>
+  <tr>
+     <td>
+        <b>Special HTML Comment Processing</b>
+     </td>
+     <td>
+        N
+     </td>
+     <td>
+        <b>Description</b>
+     </td>
+  </tr>
+</table>
+
+* *setparameter parametername parametervalue*<br><br>
+  Used to set parameters, to customize the output and behavior.<br><br>
+* *setoption optionname optionvalue*<br><br>
+  Used to set option values, to customize the output and behavior.<br><br>
 * *clear_all_state*<br><br>
   Clears all internally held data structures, and resets all options
   and parameters to their default values.<br><br>
@@ -213,12 +388,74 @@ The supported commands are listed below.
   parameters are at their default values when the program is
   invoked, so this command generally does not need to be used
   if only one book is being processed.<br><br>
-* *read_source_chapter chapter1file, chapter2file, ... chapterNfile*<br><br>
-  Reads the HTML files as if they were source chapters,
-  in the order specified, and builds
-  internal data structures.  The internal data structures
+* *read_manifest_file manifest_file*<br><br>
+  Reads the manifest file.  This program does not
+* *read_frontmatter*
+* *read_mainmatter*
+* *read_backmatter*<br><br>
+  These commands are provided for compatibility with the *LaTeX*
+  way of thinking.  Currently they are accepted but unimplemented.
+  In *LaTeX*,  these commands make the switch between the
+  numbering system used for things like the preface, the numbering
+  system used for chapters, and the numbering system used
+  for things like the any appendices, index, etc.
+  If this program is refined to work satisfactorily and
+  the paradigm seems useful, it may be generalized.<br><br>
+  Note that these commands would not read files.  They would simply
+  cause this program to adjust internal state and data
+  structures.<br><br>
+* *read_part partfile*<br><br>
+  Reads an HTML file containing a part separator
+  page.  I'm not sure yet how a part should appear in the
+  table of contents.<br><br>
+* *read_cover_page cover_page_file*<br><br>
+  Reads the cover page file.  Canonically, this must be
+  first in the commands that specify viewable book
+  content.
+* *read_title_page_file title_page_file*<br><br>
+  Reads the title page file.  Canonically, this must be
+  second in the commands that specify viewable book
+  content.
+* *read_title_page_back_file title_page_back_file*<br><br>
+  Reads the title page back file.  The "title page
+  back" (probably the wrong publishing nomenclature) contains
+  the copyright information, ISBN, etc.  Canonically, this must
+  be third in the commands that specify viewable book content.
+* *read_table_of_contents table_of_contents_file*<br><br>
+  The table of contents is fully automatically generated,
+  so the file is not read. However, in the future,
+  if the paradigm of embedding information in
+  comments proves viable,the paradigm may be
+  expanded to allow some customization, in which case
+  the file read might contain a placeholder for the
+  automatically-generated content.  The place in which the
+  table of contents appears in _ePub_ is governed by
+  where this command appears in the command file.
+* *read_preface_like_file prefacelikefile*<br><br>
+  Reads a preface-like file (preface, acknowledgement, foreword, etc.)
+  Multiple commands of this type may appear consecutively.  The title
+  of the preface-like section is specified by HTML
+  comments in the file.  The ordering within the book
+  is governed by where this file appears in the
+  command file.
+* *read_list_of_figures list_of_figures_file*<br><br>
+  *read_list_of_tables list_of_tables_file*<br><br>
+  *read_list_of_equations list_of_equations_file*<br><br>
+  Generation of these files is fully automated,,
+  so the files are not read. However, in the future,
+  if the paradigm of embedding information in
+  comments proves viable,the paradigm may be
+  expanded to allow some customization, in which case
+  the files read might contain a placeholders for the
+  automatically-generated content.  The place in which the
+  these tables appears in _ePub_ is governed by
+  where these command appears in the command file.
+* *read_source_chapter chapterfile*<br><br>
+  Reads the HTML file as if it is a source chapter,
+  and builds internal data structures.  The internal data structures
   include the association between section numbers, figures,
   tables, and equations and their alphanumeric labels.<br><br>
+  Multiple commands of this type may appear consecutively.<br><br>
   The order in which files are specified is significant,
   as the numbering of sections, figures, tables, and equations
   depends on the order in which these files are read.  Generally,
@@ -228,28 +465,58 @@ The supported commands are listed below.
   Reads the bibliography (list of references) to determine
   what alphanumeric labels exist and what their numbering
   should be.<br><br>
-* *source_template_file_neaten file1, file2, ..., fileN*<br><br>
-  Neatens each of the specified source files.  Neatening consists
-  of adjusting whitespace and formatting, and doesn't require any
-  knowledge of the higher level structure of the files, although
-  certain errors may be detected.<br><br>
-  Neatening of output files isn't required, as these are automatically
-  generated in a neat form.<br><br>
-* *filecopy source destination*<br><br>
-  Copies from the source file to the destination file.  Any existing
-  destination file is overwritten.<br><br>
-* *filedelete filename*<br><br>
-  Deletes the specified file, if it exists.  If it does not exist,
-  no error is generated.<br><br>
-* *setparameter parametername parametervalue*<br><br>
-  Used to set parameters, to customize the output and behavior.<br><br>
-* *setoption optionname optionvalue*<br><br>
-  Used to set option values, to customize the output and behavior.<br><br>
-* *process_epub special_files sourcefiles*<br><br>
-  Processes the files including chapter headings, index, etc.
-  This needs to be refined.  The special files (of which there are
-  a known number) need to come first, then the variable-length
-  list of actual source files.
+  The logical content of this file is created exclusively by the author,
+  and is not generated or modified by automation.<br><br>
+  However, the write may correct formatting issues.<br><br>
+* *write_manifest*<br><br>
+  Writes the manifest file based on the information
+  in internal data structures.  The manifest file path
+  is taken from the *read_manifest* command.
+* *write_cover_page*<br><br>
+  Writes the cover page file.  The cover page file path
+  is taken from the *read_cover_page* command.
+  Any special HTML comments that were in the
+  original file are processed, but the file is unlikely
+  to contain any such comments.<br><br>
+* *write_title_page_file*<br><br>
+  Writes the title page file.  The title page file path
+  is taken from the *read_cover_page* command.
+  Any special HTML comments that were in the
+  original file are processed, but the file is unlikely
+  to contain any such comments.<br><br>
+* *write_title_page_back_file title_page_back_file*<br><br>
+  Write the title page back file.  The title page back file path
+  is taken from the *read_cover_page_back_file* command.
+  Any special HTML comments that were in the
+  original file are processed, but the file is unlikely
+  to contain any such comments.<br><br>
+* *write_table_of_contents*<br><br>
+  Write the table of contents.  The table of contents file path
+  is taken from the *read_table_of_contents* command.
+  The table of contents is fully automatically generated,
+  so this file is written without respect to the original
+  file contents.  This may be changed in the future.
+* *write_preface_like_file prefacelikefile*<br><br>
+  Writes a preface-like file (preface, acknowledgement, foreword, etc.)
+  The path must precisely match a path provided in a
+  *read_preface_like_file* command.
+  Any special HTML comments that were in the
+  original file are processed.
+* *write_list_of_figures*<br><br>
+  *write_list_of_tables*<br><br>
+  *write_list_of_equations*<br><br>
+   Writes these files.  Generation is fully automated,
+   so the input file is not considered.  This may change
+   in the future.
+* *write_source_chapter chapterfile*<br><br>
+   Writes chapter file.  The path must exactly match
+   a path in a *read_source_chapter* command.
+* *write_bibliography bibfile*<br><br>
+  Writes the bibliography (list of references) file.
+  The written version will contain only cleanup.
+* *write_manifest manifest_file*<br><br>
+  Writes the manifest file based on the information
+  in internal data structures.
 
 ## List of Named Parameters
 
