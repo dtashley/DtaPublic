@@ -1,6 +1,180 @@
-# _epub_ref_maintain_
-The program contained in this directory, _epub_ref_maintain_ (mnemonic:
-**ePub** **ref**erence **maintain**):
+# _polypuba_
+
+## General Description
+
+The program contained in this directory, *polypuba*:
+* Translates from a text-processor-agnostic input format (augmented LaTeX, described for brevity
+as *agnostic markup*) into 3 formats:
+  * EPUB.
+  * LaTeX.
+  * HTML.
+* Performs certain other utility operations useful in publication authorhing.
+
+The mnemonic of the program name is:
+* *poly* for many, *pub* for publication; produces many [types of] publication.
+* *a* (the suffix) indicates it is the first version of the program.  Subsequent
+  versions would be suffixed *b*, *c*, etc.
+
+*polypuba* is a compiled program, written in C++ for Visual Studio, for *Windows* only.  It could likely easily
+be ported to *nix, but this has not been attempted.
+
+The general paradigm of the program is:
+* A YAML configuration file provides information about the project, such as:
+  * Conversion options.
+  * File mappings.
+* Options on the program command line indicate what is to be done using the
+  information in the YAML configuration file (convert, cleanup, parse for anomalies, etc.).
+* All errors and anomalies result in a diagnostic message and program termination.
+
+## Licensing
+
+The content used in *polypuba* is provided under the following licenses:
+* *polypuba* itself is provided under *The Unlicense*.
+* [LibGen](https://github.com/dtashley/LibGen) is provided under *The Unlicense*.
+* [LibNum](https://github.com/dtashley/LibNum) is provided under *The Unlicense*.
+* [yaml-cpp](https://github.com/jbeder/yaml-cpp/tree/master/src) is provided under *The MIT License*.
+
+## Building and Debugging the Program
+
+*polypuba* was built under *Visual Studio 2026, Community Edition*.  It is a statically-linked
+single-threaded console-mode C++ program; and building it, debugging it, or modifying it should be
+easy.
+
+Detailed instructions will be provided.
+
+## Invocation of the Program
+
+The program is always invoked as:
+
+```polypuba <options> <command> <path_to_yaml_configuration_file>```
+
+### Options
+
+None defined yet.
+
+### Commands
+
+#### *translate*
+
+The program will read the configuration file, and undertake full translation
+from agnostic markup into all formats as specified in the configuration file.
+
+#### epubtocindexadd
+
+The program will read the configuration file, and adjust the table of contents in the EPUB version of the
+output to include the index.
+
+## Configuration File Format and Options
+
+The configuration file is a YAML file, and specifies:
+•	The general options to use for the conversion from the text-processor agnostic markup language to ePub, LaTeX, or HTML.
+•	The file binding from the text-processor agnostic markup language to the ePub, LaTeX, or HTML files.
+The fundamental unit for all 3 targets is the chapter.  Generally, one text-processor agnostic markup language file, one ePub file, or one HTML file corresponds to one chapter.
+2.1	General Options
+General options are at the top level of the YAML file (not part of a list or array).
+2.1.1	debug_level
+This optional option specifies the amount of extra information printed to aid in debugging.  If not provided, the default is 0.
+Values:
+•	0 (default) : terse.
+•	1 : some extra information printed.
+•	2 : more extra information printed.
+•	3 : detailed information printed.
+•	4 : very detailed information printed.
+Example:
+debug_level: 3
+2.2	epub_options, latex_options, html_options
+epub_options, latex_options, and html_options are lists that specify the options to use for epub conversion, LaTeX conversion, and HTML conversion.
+If any of these lists are omitted, the program will not attempt conversion to the respective format.  If none of these lists are present, the program will not attempt any conversion.
+The elements in the list are divided into two categories:
+•	Options that are common to more than one conversion format (typically, all).
+•	Options that are specific to only one conversion formats.
+2.2.1	Common Conversion Options
+2.2.1.1	base_output_directory
+The base directory where output of the specific type should be placed.  This may be an absolute or relative path.  If it is relative, it is relative to the working directory from which the Python script is launched.
+2.2.1.2	base_input_directory
+The base directory where input files are read.  This path should not include a trailing path separator.
+2.2.1.3	cover_graphic
+Optional.
+For epub generation, path to the file that should be used as the cover graphic.
+For HTML generation, path to the file that should be used at the start of the document.
+2.2.1.4	title
+The title of the work.  A newline in the title is interpreted as a title in larger font and a subtitle in smaller font.
+2.2.1.5	content_list
+A list of the content in the work.  Each item of content should have the following fields.
+•	type
+o	P = preface
+o	A = acknowledgements
+o	F = list of figures
+o	T = list of tables
+o	C = chapter
+o	R = part separator
+o	F = list of references
+o	I = index
+•	input_file
+o	The file from which to read the input, agnostic markup.
+•	output_file
+o	The file into which to place the corresponding output.
+2.2.2	epub-Specific Conversion Options
+2.2.2.1	equation_graphics_input_directory
+The directory, relative to base_input_directory, where equation graphics are contained.
+2.2.2.2	equation_graphics_output_directory
+The directory, relative to base_input_directory, where equation graphics are stored.
+2.2.2.3	figure_graphics_input_directory
+
+2.2.2.4	figure_graphics_output_directory
+
+2.2.2.5	max_output_line_len
+
+
+2.2.3	LaTeX-Specific Conversion Options
+TBD.
+2.2.4	HTML-Specific Conversion Options
+TBD.
+3	Text-Processor Agnostic Markup Language Definition
+3.1	Overview of the Agnostic Markup Language
+The agnostic markup language closely mirrors LaTeX, with these differences.
+1.	Additional commands are added that have no analogue in LaTeX.
+2.	Certain identically-named commands are different or take a different number or type of parameters.
+The SHA1 cryptographic hash is used throughout for indexing, especially equations.
+3.2	Character Sets and Special Characters
+
+3.3	Lines and Line Breaks
+
+3.4	Directing Content to Only epub, LaTeX, or HTML
+The \directedcontent[channels]{} command will produce corresponding output only to the specified channels.
+\directedcontent fills essentially the same role as the C preprocessor.  It is the first command processed, before all others.
+3.5	Labels, References, and Page References
+The LaTeX \label{}, \ref{}, and \pageref{} are processed.
+It is assumed that labels are all of the form “cint0:spcx9”, where colons are used to separate identifiers that begin with a letter and may end with digit(s).
+The author is responsible for assuring uniqueness.
+\pageref{} is only relevant for a document that lays out on physical pages.
+\secnumlink{}
+\secnumtitlelin{}
+3.6	Mathematical Typesetting and Equations
+TBD.
+3.6.1	Inline Equations
+
+3.6.2	Explicit Equations
+
+3.6.3	Equation Arrays
+
+3.7	Figures
+TBD.
+3.8	Tables
+TBD.
+3.9	Index Entries
+TBD.
+
+
+
+
+
+
+
+## Left-Over Content
+
+The content below is yet to be filed and reorganized.
+
 * Parses the source files of an _ePub_ project.
   * The source files must be annotated with special HTML comments
     that this tool interprets.
