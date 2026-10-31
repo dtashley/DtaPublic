@@ -147,42 +147,49 @@ be used as the cover graphic.
 For HTML generation, path to the file that should
 be used at the start of the document.
 
-If this option is not provided, 
+For LaTeX generation, this option is ignored.
 
-##### 2.2.1.4 title
+If this option is not provided, EPUB and HTML output both
+will not incorporate a cover graphic.
+
+##### *title* (Optional)
 
 The title of the work. A newline in the title is
 interpreted as a title in larger font and a
-subtitle in smaller font.
+subtitle in smaller font.  There may be at most one newline
+in the title.
 
-##### 2.2.1.5 content_list
+If this option is not provided, the text "Untitled" is used
+as a title.
+
+##### *content_list* (Required)
 
 A list of the content in the work. Each item of
 content should have the following fields.
-- `type`
-  - `P` = preface
-  - `A` = acknowledgements
-  - `F` = list of figures
-  - `T` = list of tables
-  - `C` = chapter
-  - `R` = part separator
-  - `F` = list of references
-  - `I` = index
-- `input_file`
+- *type*
+  - *P* = preface
+  - *A* = acknowledgements
+  - *F* = list of figures
+  - *T* = list of tables
+  - *C* = chapter
+  - *R* = part separator
+  - *F* = list of references
+  - *I* = index
+- *input_file*
   - The file from which to read the input,
     agnostic markup.
-- `output_file`
+- *output_file*
   - The file into which to place the
     corresponding output.
 
-#### 2.2.2 epub-Specific Conversion Options
+#### EPUB-Specific Conversion Options
 
-##### 2.2.2.1 equation_graphics_input_directory
+##### *equation_graphics_input_directory* (Optional)
 
 The directory, relative to base_input_directory,
 where equation graphics are contained.
 
-##### 2.2.2.2 equation_graphics_output_directory
+##### *equation_graphics_output_directory* (Optional)
 
 The directory, relative to base_input_directory,
 where equation graphics are stored.
