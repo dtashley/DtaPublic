@@ -50,7 +50,9 @@ The program is always invoked as:
 
 ### Options
 
-None defined yet.
+None defined yet.  Each option will begin with a hyphen, although
+there is no need because the required parameters make it
+unambiguous which parameters are options.
 
 ### Commands
 
@@ -67,21 +69,36 @@ output to include the index.
 ## Configuration File Format and Options
 
 The configuration file is a YAML file, and specifies:
-•	The general options to use for the conversion from the text-processor agnostic markup language to ePub, LaTeX, or HTML.
-•	The file binding from the text-processor agnostic markup language to the ePub, LaTeX, or HTML files.
-The fundamental unit for all 3 targets is the chapter.  Generally, one text-processor agnostic markup language file, one ePub file, or one HTML file corresponds to one chapter.
-2.1	General Options
+* The general options to use for the conversion from the 
+  agnostic markup to EPUB, LaTeX, or HTML.
+* The file binding from the agnostic markup to the EPUB,
+  LaTeX, or HTML files.
+* The fundamental unit for all 3 targets is the *chapter*.
+  * One agnostic markup file, one EPUB file, or one
+    HTML file usually corresponds to one chapter.
+  * The configuration file format in almost all cases requires
+    a 1:1 correspondence between agnostic markup files
+    and EPUB, LaTeX, or HTML output files.
+
+### General Options
+
 General options are at the top level of the YAML file (not part of a list or array).
-2.1.1	debug_level
-This optional option specifies the amount of extra information printed to aid in debugging.  If not provided, the default is 0.
-Values:
-•	0 (default) : terse.
-•	1 : some extra information printed.
-•	2 : more extra information printed.
-•	3 : detailed information printed.
-•	4 : very detailed information printed.
-Example:
-debug_level: 3
+
+####	*debug_level* (Optional)
+
+Specifies the amount of extra information printed to the console output to
+aid in debugging.  If not provided, the default of 0 is used.
+
+| Numerical Value  | Behavior        |
+| ------------- | -------------      |
+| 0 (default)   | Terse / General    |
+| 1             | Semi-detailed      |
+| 2             | Detailed           |
+| 3             | Extra-detailed     |
+| 4             | Maximally-detailed |
+
+Example: ```debug_level: 3```
+
 2.2	epub_options, latex_options, html_options
 epub_options, latex_options, and html_options are lists that specify the options to use for epub conversion, LaTeX conversion, and HTML conversion.
 If any of these lists are omitted, the program will not attempt conversion to the respective format.  If none of these lists are present, the program will not attempt any conversion.
