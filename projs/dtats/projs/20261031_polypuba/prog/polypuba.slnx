@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="polypuba.vcxproj" Id="9dcb7063-7e0b-4ddd-8bfe-27b6cb89661e" />
+</Solution>
