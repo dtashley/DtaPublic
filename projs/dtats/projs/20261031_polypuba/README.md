@@ -19,11 +19,11 @@ The mnemonic of the program name is:
 be ported to *nix, but this has not been attempted.
 
 The general paradigm of the program is:
-* A YAML configuration file provides information about the project, such as:
+* A configuration file provides information about the project, such as:
   * Conversion options.
   * File mappings.
 * Options on the program command line indicate what is to be done using the
-  information in the YAML configuration file (convert, cleanup, parse for anomalies, etc.).
+  information in the configuration file (convert, cleanup, parse for anomalies, etc.).
 * All errors and anomalies result in a diagnostic message and program termination.
 
 ## Licensing
@@ -32,7 +32,6 @@ The content used in *polypuba* is provided under the following licenses:
 * *polypuba* itself is provided under *The Unlicense*.
 * [LibGen](https://github.com/dtashley/LibGen) is provided under *The Unlicense*.
 * [LibNum](https://github.com/dtashley/LibNum) is provided under *The Unlicense*.
-* [yaml-cpp](https://github.com/jbeder/yaml-cpp/tree/master/src) is provided under *The MIT License*.
 
 ## Building and Debugging the Program
 
@@ -46,7 +45,7 @@ Detailed instructions will be provided.
 
 The program is always invoked as:
 
-```polypuba <options> <command> <path_to_yaml_configuration_file>```
+```polypuba <options> <command> <path_to_configuration_file>```
 
 ### Options
 
@@ -68,7 +67,7 @@ output to include the index.
 
 ## Configuration File Format and Options
 
-The configuration file is a YAML file, and specifies:
+The configuration file is a text file, and specifies:
 * The general options to use for the conversion from the 
   agnostic markup to EPUB, LaTeX, or HTML.
 * The file binding from the agnostic markup to the EPUB,
@@ -79,6 +78,33 @@ The configuration file is a YAML file, and specifies:
   * The configuration file format in almost all cases requires
     a 1:1 correspondence between agnostic markup files
     and EPUB, LaTeX, or HTML output files.
+
+The configuration file is a set of keys or key-value pairs,
+one per line.  The indentation of each line of the file gives a hierarchical
+structure: keys or key-value pairs that are indented under a key or key-value
+pair belong to the key or key-value pair at a lower level of indentation
+immediately above.  (The reason for not using a YAML file is that the
+existing YAML parsing libraries were awkward to integrate.)
+
+Each key must be an identifier that begins with a letter and may contain
+letters, numbers, and the underscore character only.  Keys are
+case-sensitive.  Each value is separated from the key by a colon (":")
+and may be either:
+* An integer, without commas, that falls within the range of -2<sup>31</sup>
+  to 2<sup>31</sup>-1, inclusive.
+* A string, delimited by double quotes.  Double quotes within the string
+  can be escaped by preceding them with a backslash.  (Currently, there is
+  no provision for including unprintable and other characters in strings,
+  but this functionality may need to be added at some point.)
+
+```
+things_i_like: {bananas, coconuts, grapes},
+things_i_dont_like:
+{
+  {type: P, inputfile: "testfile"},
+  {type: Q, inputfile: "testfile"}
+}
+```
 
 ### How Paths are Calculated
 
