@@ -79,6 +79,29 @@ The configuration file is a text file, and specifies:
     a 1:1 correspondence between agnostic markup files
     and EPUB, LaTeX, or HTML output files.
 
+The configuration file inherently contains 3 types of objects.
+* Key-value pairs, where the key is separated from the value
+  by a colon (":").
+  * Keys must be identifiers that begin with a letter and contain
+    only letters, digits, and the underscore character.  Case is
+    significant.
+  * Values may be:
+    * Any unquoted item that contains no whitespace, and consists only of
+      letters, numbers, and the underscore character.
+    * An integer in the range of -2<sup>31</sup>
+      to 2<sup>31</sup>-1, inclusive.
+    * A double-quoted string.
+      * Within a double-quoted string, double quotes may be escaped with the
+        backslash character.
+      * Only ordinary printable characters are allowed.
+      * More defined escape sequences may be introduced later.
+  * If no colon is present, an item is interpreted as a key without a value.
+  * Keys must be unique within a list.
+* Lists, which are key-value pairs, separated by commas.
+* Arrays of lists, signified by curly-braced lists, separated by commas.
+* Since a value may be a list, and a list may contain an array of lists,
+  this can be nested arbitrarily deeply.
+
 The configuration file is a set of keys or key-value pairs,
 one per line.  The indentation of each line of the file gives a hierarchical
 structure: keys or key-value pairs that are indented under a key or key-value
