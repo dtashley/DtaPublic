@@ -79,57 +79,67 @@ The configuration file is a text file, and specifies:
     a 1:1 correspondence between agnostic markup files
     and EPUB, LaTeX, or HTML output files.
 
-The configuration file inherently contains 3 types of objects.
-* Key-value pairs, where the key is separated from the value
-  by a colon (":").
-  * Keys must be identifiers that begin with a letter and contain
-    only letters, digits, and the underscore character.  Case is
-    significant.
-  * Values may be:
-    * Any unquoted item that contains no whitespace, and consists only of
+The configuration file contains several types of objects.
+* Values
+    * An unquoted string that contains no whitespace, and consists only of
       letters, numbers, and the underscore character.
     * An integer in the range of -2<sup>31</sup>
       to 2<sup>31</sup>-1, inclusive.
     * A double-quoted string.
       * Within a double-quoted string, double quotes may be escaped with the
         backslash character.
+      * Backslashes may be placed in a quoted string by doubling them.
       * Only ordinary printable characters are allowed.
       * More defined escape sequences may be introduced later.
-  * If no colon is present, an item is interpreted as a key without a value.
-  * Keys must be unique within a list.
-* Lists, which are key-value pairs, separated by commas.
-* Arrays of lists, signified by curly-braced lists, separated by commas.
-* Since a value may be a list, and a list may contain an array of lists,
-  this can be nested arbitrarily deeply.
+* Keys
+  * Identifiers that begin with a letter and contain
+    only letters, digits, and the underscore character.  Case is
+    significant.
+* Key-value pairs, where the key is separated from the value by a colon (":").
+  * If key is present without a colon, it is treated as a key-value pair with
+    an empty value.  (There is no syntax for specifying an empty value explicitly--it can
+    only be inferred from a key with no value.)
+* Dictionaries, signified with curly braces ("{" and "}"), which are
+  ordered collections of key-value pairs, separated by commas.
+* Arrays, signified by square brackets ("[" and "]"), which are ordered collections
+  of arrays and dictionaries, separated by commas.
 
-The configuration file is a set of keys or key-value pairs,
-one per line.  The indentation of each line of the file gives a hierarchical
-structure: keys or key-value pairs that are indented under a key or key-value
-pair belong to the key or key-value pair at a lower level of indentation
-immediately above.  (The reason for not using a YAML file is that the
-existing YAML parsing libraries were awkward to integrate.)
+Since a dictionary may contain an array (only as a value, not as a key),
+and an array may contain a dictionary, dictionaries and arrays may be nested
+arbitrarily deeply.
 
-Each key must be an identifier that begins with a letter and may contain
-letters, numbers, and the underscore character only.  Keys are
-case-sensitive.  Each value is separated from the key by a colon (":")
-and may be either:
-* An integer, without commas, that falls within the range of -2<sup>31</sup>
-  to 2<sup>31</sup>-1, inclusive.
-* A string, delimited by double quotes.  Double quotes within the string
-  can be escaped by preceding them with a backslash.  (Currently, there is
-  no provision for including unprintable and other characters in strings,
-  but this functionality may need to be added at some point.)
+The configuration file follows the conventions one would expect
+for a language consisting of tokens.  Whitespace is not significant,
+except within a quoted string.  A quoted string may not span multiple lines.
+
+C- and C++-style comments are supported.
+
+The configuration file is syntactically a dictionary, including the
+curly braces.  A sample configuration file is below, showing the major
+features.
 
 ```
-things_i_like: {bananas, coconuts, grapes},
-things_i_dont_like:
+/* Sample configuration file */
 {
-  {type: P, inputfile: "testfile"},
-  {type: Q, inputfile: "testfile"}
+  things_i_like: {bananas: -3, 
+                  coconuts, //Key with no value
+                  grapes: "yummy yes"}
+  things_i_dont_like:
+  [
+    {type: P, inputfile: "testfile"},
+    {type: Q, inputfile: "testfile"}
+  ]
 }
 ```
 
+The configuration file format described above came about because it was
+awkward to integrate the public YAML libraries I could find.
+
 ### How Paths are Calculated
+
+All path separators specified in the configuration file must
+be the forward slash (Unix style).  They are converted
+internally to Windows path separators as necessary.
 
 The *working directory* or *current working directory* is 
 an idea that exists under both Windows and *nix
