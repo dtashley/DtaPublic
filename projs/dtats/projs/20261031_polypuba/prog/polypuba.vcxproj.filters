@@ -18,7 +18,7 @@
     <ClCompile Include="polypuba.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sha1.cpp">
+    <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\crypto_hash\lg_cpp_dd_sha1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
