@@ -121,9 +121,26 @@ features.
 ```
 /* Sample configuration file */
 {
+  debug_level : 2,
+
+  epub_options:
+    {
+      base_input_directory : ""
+    },
+  latex_options:
+    {
+      base_input_directory : ""
+
+    },
+  html_options:
+    {
+      base_input_directory : ""
+
+    },
+
   things_i_like: {bananas: -3, 
                   coconuts, //Key with no value
-                  grapes: "yummy yes"}
+                  grapes: "yummy yes"},
   things_i_dont_like:
   [
     {type: P, inputfile: "testfile"},
@@ -164,16 +181,16 @@ Using the example of *input_file*, the path used to try to open the file would b
 * If *base_input_directory* is a relative path:
   * *current_working_directory* + "/" + *base_input_directory* + "/" + *text_input_directory* + "/" + *input_file*.
 
-It is also possible that *base_input_directory* is not specified or is the empty
-string, and *text_input_directory* is a relative path; or that *base_input_directory* and
-*text_input_directory* are both unspecified or are the empty string, and the
-entire absolute or relative path is contained in *input_file*.  In all cases,
+Note that because of path concatenation, there is a large amount of
+flexibility in how paths are specified.  It would even possible to
+to not specify any path except *input_file*.  In all cases,
 *polypuba* will write to the console which path it is attempting to use
 to read or write a file, so any unexpected path calculations can be diagnosed.
 
 ### General Options
 
-General options are at the top level of the YAML file (not part of a list or array).
+General options are at the top level of the configuration file (part of
+the top-level dictionary).
 
 ####	*debug_level* (Optional)
 
