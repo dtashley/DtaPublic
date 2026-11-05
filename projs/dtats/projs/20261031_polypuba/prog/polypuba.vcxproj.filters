@@ -21,5 +21,8 @@
     <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\crypto_hash\lg_cpp_dd_sha1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="configfile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -122,26 +122,28 @@ features.
 /* Sample configuration file */
 {
   debug_level : 2,
+  base_input_directory : "",
+  text_input_directory : "",
+  cover_graphic : "",
+  title : ""
 
   epub_options:
     {
-      base_input_directory : ""
+      base_output_directory : ""
     },
   latex_options:
     {
-      base_input_directory : ""
-
+      base_output_directory : ""
     },
   html_options:
     {
-      base_input_directory : ""
-
+      base_output_directory : ""
     },
 
   things_i_like: {bananas: -3, 
                   coconuts, //Key with no value
                   grapes: "yummy yes"},
-  things_i_dont_like:
+  content_list:
   [
     {type: P, inputfile: "testfile"},
     {type: Q, inputfile: "testfile"}

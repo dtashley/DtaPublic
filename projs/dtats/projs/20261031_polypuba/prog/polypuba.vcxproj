@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\crypto_hash\lg_cpp_dd_sha1.cpp" />
+    <ClCompile Include="configfile.cpp" />
     <ClCompile Include="polypuba.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
