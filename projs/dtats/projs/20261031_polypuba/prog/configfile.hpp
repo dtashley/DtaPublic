@@ -35,43 +35,45 @@
 #include <cstdint>
 #include <string>
 
-#if 0
-//!< \class LgSha1
+enum class ConfigFileObjType
+{
+   Invalid,
+   Key,
+   KeyValPair,
+   Dictionary,
+   Array
+};
+
+struct ConfigFileObjRecord
+{
+   enum class ConfigFileObjType m_type;
+   char *key;
+   char *value_string;
+   int32_t value_int32;
+   size_t numChildren;
+   struct ConfigFileObjRecord *children;
+};
+typedef struct ConfigFileObjRecord tConfigFileObjRecord;
+
+//!< \class ConfigFile
 //!< Facilitate the calculation of the SHA1 hash, as described in NIST FIPS 180-1.
 //!< The general paradigm is that the hash state is initialized (often by construction),
 //!< data is added to the hash calculation (always in a byte buffer, all at once or
 //!< incrementally), the hash is finalized, and then the hash value can be extracted.
-class LgSha1
+class ConfigFile
 {
 #ifndef UT_GTEST
 private:
 #else
 public:
 #endif
-   size_t   m_bufferSize;
+   tConfigFileObjRecord *m_root;
    //!< The number of bytes presently in the buffer.  These are being held in order to reach
    //!< finalization or enough bytes added to fill the buffer.
-   uint64_t m_bitCount;
-   //!< The number of bits in the message whose SHA1 is being calculated, so far.
-   bool     m_finalized;
-   //!< false if calculation has not been finalized, true if it has.  An SHA1 that has been
-   //!< finalized cannot have more data added or be finalized again.
-   uint32_t m_state[5];
-   //!< The state as defined in FIPS 180-1.
-   uint8_t  m_buffer[64];
-   //!< The buffer to hold pending bytes to be hashed.
 public:
-   LgSha1() noexcept;
-   ~LgSha1() noexcept;
-   void Add(uint8_t const* in_bptr, size_t in_nbytes) noexcept;
-   void AddOne(uint8_t in_b) noexcept;
-   void Finalize(void) noexcept;
-   bool IsFinalized(void) const noexcept;
-   void Clear(void) noexcept;
-   void ExtractToCstring(char* in_pstr, bool in_uc = false) const noexcept;
-   void ExtractToByteArray(uint8_t* in_pbarray) const noexcept;
-   void ExtractToUint32Array(uint32_t* in_pu32array) const noexcept;
+   ConfigFile() noexcept;
+   ~ConfigFile() noexcept;
+   void MarkAll(void) noexcept;
+   void ClearAll(void) noexcept;
 };
-
-#endif
 #endif
