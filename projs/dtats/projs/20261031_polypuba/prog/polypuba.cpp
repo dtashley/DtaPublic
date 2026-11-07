@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
+#include "configfile.hpp"
 #include "lg_cpp_cm_fio.hpp"
 
 
@@ -53,6 +54,12 @@ static void emit_help_info(std::ostream& in_output_stream, bool in_emit_trailing
 }
 
 
+void command_translate(std::ostream& in_output_stream, int argc, char* argv[])
+{
+
+}
+
+
 int main(int argc, char *argv[])
 {
    int rc = 0;
@@ -77,7 +84,10 @@ int main(int argc, char *argv[])
    }
    else if (strcmp(argv[argc-2], "translate") == 0)
    {
+      ConfigFile cfgfile;
 
+      //translate command.
+      command_translate(std::cout, argc, argv);
    }
    else if (strcmp(argv[argc-2], "epubtocindexadd") == 0)
    {
