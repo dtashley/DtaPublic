@@ -36,6 +36,12 @@
 
 #include "configfile.hpp"
 
+//For simplicity, the configuration file is parsed into a one-dimensional array of
+//records.  It is single-purpose, and inelegant.  There is a maximum depth to
+//the scheme, set at compile time.  Essentially, each record is a leaf node,
+//and includes information about all of the parents.  The top-level parent
+//is a dictionary.
+
 /*!
  * \brief                       Default constructor.  Constructs a new object.
  *
@@ -43,7 +49,7 @@
  *
  * \errorsandexceptions         No errors or exceptions are possible.
  */
-ConfigFile::ConfigFile() noexcept : m_root{nullptr}
+ConfigFile::ConfigFile() noexcept : x{0}
 {}
 
 
@@ -56,11 +62,41 @@ ConfigFile::ConfigFile() noexcept : m_root{nullptr}
  */
 ConfigFile::~ConfigFile() noexcept
 {
-   m_root = nullptr;
+   x = 0;
 }
 
 void ConfigFile::MarkAll(void) noexcept
 {}
 
-void ConfigFile::ClearAll(void) noexcept
+void ConfigFile::UnmarkAll(void) noexcept
+{}
+
+void ConfigFile::MarkOne(size_t in_el_to_mark) noexcept
+{}
+
+void ConfigFile::UnmarkOne(size_t in_el_to_mark) noexcept
+{}
+
+void ConfigFile::MarkRange(size_t in_el_0, size_t in_el_n_minus_one) noexcept
+{}
+
+void ConfigFile::UnmarkRange(size_t in_el_0, size_t in_el_n_minus_one) noexcept
+{}
+
+bool ConfigFile::IsMarked(size_t in_el) const noexcept
+{
+   return true;
+}
+
+bool ConfigFile::Parse(const LgBufUint8& in_fc) noexcept
+{
+   return true;
+}
+
+size_t ConfigFile::Nelem(void) const noexcept
+{
+    return 0;
+}
+
+void ConfigFile::Nelem(size_t in_el, tConfigFileObjRecord& out_rec) const noexcept
 {}

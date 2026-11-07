@@ -111,6 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\gitsbx\LibGen\src\cpp_dd\size_t;C:\gitsbx\LibGen\src\cpp_dd\memory;C:\gitsbx\LibGen\src\cpp_dd\char;C:\gitsbx\LibGen\src\cpp_cm;C:\gitsbx\LibGen\src\cpp_dd\char_array;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,6 +130,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\gitsbx\LibGen\src\cpp_dd\size_t;C:\gitsbx\LibGen\src\cpp_dd\memory;C:\gitsbx\LibGen\src\cpp_dd\char;C:\gitsbx\LibGen\src\cpp_cm;C:\gitsbx\LibGen\src\cpp_dd\char_array;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,7 +141,12 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_cm\lg_cpp_cm_fio.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\char\lg_cpp_dd_charf.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\char_array\lg_cpp_dd_buf_uint8.cpp" />
     <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\crypto_hash\lg_cpp_dd_sha1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\memory\lg_cpp_dd_malloc_alt.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\size_t\lg_cpp_dd_size_t.cpp" />
     <ClCompile Include="configfile.cpp" />
     <ClCompile Include="polypuba.cpp" />
   </ItemGroup>

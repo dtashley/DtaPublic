@@ -34,32 +34,64 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
+
+#include "lg_cpp_dd_buf_uint8.hpp"
+
+#define MODULE_CONFIGFILE_CFGFILE_DEPTH_MAX (5)
+  //!< The maximum depth of the configuration file nesting.  Each dictionary
+  //!< or array is a new level.
 
 enum class ConfigFileObjType
 {
-   Invalid,
+   Undefined,
+      //!< Unused or undefined.  This would normally occur when for unused levels
+      //!< of an array holding leaf nodes.
    Key,
-   KeyValPair,
+      //!< Key only with no value.
+   KeyValPairString,
+      //!< Key-value pair, with the value represented as a string.  This means
+      //!< either that the value was double-quoted, or that the value would not
+      //!< parse as an integer.  In this case, the string field is populated
+      //!< but the integer is canonically zero.
+   KeyValPairInt,
+      //!< Key-value pair, with the value represented as an integer.  This means
+      //!< the integer was not double-quoted, and parsed successfully as a signed
+      //!< integer in the range of -2^31 to 2^31-1, inclusive.  In this case,
+      //!< the string field is the textual representation of the integer and the
+      //!< integer field is the value of the integer.
    Dictionary,
-   Array
+      //!< A dictionary.
+   ArrayDict
+      //!< An array of dictionaries.  An array can only contain dictionaries.
 };
 
-struct ConfigFileObjRecord
+
+//!< The fundamental record representing a nesting level in a leaf node.
+struct ConfigFileNlRecord
 {
    enum class ConfigFileObjType m_type;
-   char *key;
-   char *value_string;
+      //!< The type of element.
+   std::string key;
+      //!< The key value.  This will always exist.
+   std::string value_string;
+      //!< The value.  If this is not populated, it will be the empty string.
    int32_t value_int32;
-   size_t numChildren;
-   struct ConfigFileObjRecord *children;
+      //!< The signed 32-bit integer, if the value parses as an integer.
+};
+typedef struct ConfigFileNlRecord tConfigFileNlRecord;
+
+//!< The fundamental record representing a leaf node from the configuration file.
+struct ConfigFileObjRecord
+{
+    size_t leaf_node_depth;
+    tConfigFileNlRecord paths[MODULE_CONFIGFILE_CFGFILE_DEPTH_MAX];
 };
 typedef struct ConfigFileObjRecord tConfigFileObjRecord;
 
-//!< \class ConfigFile
-//!< Facilitate the calculation of the SHA1 hash, as described in NIST FIPS 180-1.
-//!< The general paradigm is that the hash state is initialized (often by construction),
-//!< data is added to the hash calculation (always in a byte buffer, all at once or
-//!< incrementally), the hash is finalized, and then the hash value can be extracted.
+
+//! \class ConfigFile
+//! The class holding the results of parsing a configuration file.
 class ConfigFile
 {
 #ifndef UT_GTEST
@@ -67,13 +99,20 @@ private:
 #else
 public:
 #endif
-   tConfigFileObjRecord *m_root;
-   //!< The number of bytes presently in the buffer.  These are being held in order to reach
-   //!< finalization or enough bytes added to fill the buffer.
+    int x;
+    std::vector<tConfigFileObjRecord> m_recs;
 public:
    ConfigFile() noexcept;
    ~ConfigFile() noexcept;
    void MarkAll(void) noexcept;
-   void ClearAll(void) noexcept;
+   void UnmarkAll(void) noexcept;
+   void MarkOne(size_t in_el_to_mark) noexcept;
+   void UnmarkOne(size_t in_el_to_mark) noexcept;
+   void MarkRange(size_t in_el_0, size_t in_el_n_minus_one) noexcept;
+   void UnmarkRange(size_t in_el_0, size_t in_el_n_minus_one) noexcept;
+   bool IsMarked(size_t in_el) const noexcept;
+   bool Parse(const LgBufUint8 &in_fc) noexcept;
+   size_t Nelem(void) const noexcept;
+   void Nelem(size_t in_el, tConfigFileObjRecord &out_rec) const noexcept;
 };
 #endif
