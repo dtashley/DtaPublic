@@ -6,6 +6,7 @@
 
 #include "configfile.hpp"
 #include "lg_cpp_cm_fio.hpp"
+#include "lg_cpp_dd_fbuf_uint8.hpp"
 
 
 static void echo_command_line_parameters(std::ostream& in_output_stream, int argc, char *argv[])
@@ -85,9 +86,24 @@ int main(int argc, char *argv[])
    else if (strcmp(argv[argc-2], "translate") == 0)
    {
       ConfigFile cfgfile;
+      LgFbufUint8 file_buffer;
+      bool fread_success;
 
-      //translate command.
-      command_translate(std::cout, argc, argv);
+      //Attempt to read from the config file into the file buffer.  If this fails, the program will exit with an error code.
+      fread_success = file_buffer.Fread(argv[argc - 1]);
+
+      if (!fread_success)
+      {
+         std::cout << "Error:  Could not open/read configuration file.  Exiting program.\n";
+         LgCppCm_FioHlineStream(std::cout);
+
+         rc = 1;  //Error return code.
+      }
+      else
+      {
+         //translate command.
+         command_translate(std::cout, argc, argv);
+      }
    }
    else if (strcmp(argv[argc-2], "epubtocindexadd") == 0)
    {
@@ -105,6 +121,9 @@ int main(int argc, char *argv[])
 
    //Execution ends heading.
    std::cout << "Execution ends.\n";
+   LgCppCm_FioHlineStream(std::cout);
+
+   std::cout << "Exiting with return code " << rc << ".\n";
    LgCppCm_FioHlineStream(std::cout);
 
    return rc;
