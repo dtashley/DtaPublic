@@ -6,7 +6,7 @@
 
 #include "configfile.hpp"
 #include "lg_cpp_cm_fio.hpp"
-#include "lg_cpp_dd_fbuf_uint8.hpp"
+#include "lg_cpp_dd_buf_uint8.hpp"
 
 
 static void echo_command_line_parameters(std::ostream& in_output_stream, int argc, char *argv[])
@@ -55,9 +55,22 @@ static void emit_help_info(std::ostream& in_output_stream, bool in_emit_trailing
 }
 
 
-void command_translate(std::ostream& in_output_stream, int argc, char* argv[])
+void command_translate(std::ostream& in_output_stream, const LgBufUint8 &file_buffer, int argc, char* argv[])
 {
+   in_output_stream << "TRANSLATE command.\n";
+   LgCppCm_FioHlineStream(in_output_stream);
 
+   echo_command_line_parameters(in_output_stream, argc, argv);
+
+}
+
+
+void command_epubtocindexadd(std::ostream& in_output_stream, const LgBufUint8& file_buffer, int argc, char* argv[])
+{
+   in_output_stream << "EPUBTOCINDEXADD command.\n";
+   LgCppCm_FioHlineStream(in_output_stream);
+
+   echo_command_line_parameters(in_output_stream, argc, argv);
 }
 
 
@@ -86,11 +99,13 @@ int main(int argc, char *argv[])
    else if (strcmp(argv[argc-2], "translate") == 0)
    {
       ConfigFile cfgfile;
-      LgFbufUint8 file_buffer;
+      LgBufUint8 file_buffer;
       bool fread_success;
+      uint32_t fread_err_mask;
+      std::string fread_err_desc;
 
       //Attempt to read from the config file into the file buffer.  If this fails, the program will exit with an error code.
-      fread_success = file_buffer.Fread(argv[argc - 1]);
+      file_buffer.Fread(argv[argc - 1], fread_success, fread_err_mask, fread_err_desc);
 
       if (!fread_success)
       {
@@ -101,13 +116,39 @@ int main(int argc, char *argv[])
       }
       else
       {
+         std::cout << "Configuration file read: " << file_buffer.Nelem() << " bytes.\n";
+         LgCppCm_FioHlineStream(std::cout);
+
          //translate command.
-         command_translate(std::cout, argc, argv);
+         command_translate(std::cout, file_buffer, argc - 3, argv + 2);
       }
    }
    else if (strcmp(argv[argc-2], "epubtocindexadd") == 0)
    {
+      ConfigFile cfgfile;
+      LgBufUint8 file_buffer;
+      bool fread_success;
+      uint32_t fread_err_mask;
+      std::string fread_err_desc;
 
+      //Attempt to read from the config file into the file buffer.  If this fails, the program will exit with an error code.
+      file_buffer.Fread(argv[argc - 1], fread_success, fread_err_mask, fread_err_desc);
+
+      if (!fread_success)
+      {
+         std::cout << "Error:  Could not open/read configuration file.  Exiting program.\n";
+         LgCppCm_FioHlineStream(std::cout);
+
+         rc = 1;  //Error return code.
+      }
+      else
+      {
+         std::cout << "Configuration file read: " << file_buffer.Nelem() << " bytes.\n";
+         LgCppCm_FioHlineStream(std::cout);
+
+         //translate command.
+         command_epubtocindexadd(std::cout, file_buffer, argc - 3, argv + 2);
+      }
    }
    else
    {

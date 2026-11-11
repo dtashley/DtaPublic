@@ -39,7 +39,7 @@
     <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\size_t\lg_cpp_dd_size_t.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\char_array\lg_cpp_dd_fbuf_uint8.cpp">
+    <ClCompile Include="..\..\..\..\..\..\LibGen\src\cpp_dd\parse\lg_parse_rdp_buf_uint8.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
