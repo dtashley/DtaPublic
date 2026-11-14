@@ -34,7 +34,12 @@
 //--------------------------------------------------------------------------------------------------
 #define MODULE_CONFIGFILE_CPP
 
+#include <iostream>
+
 #include "configfile.hpp"
+
+#include "lg_parse_rdp_buf_uint8.hpp"
+
 
 //For simplicity, the configuration file is parsed into a one-dimensional array of
 //records.  It is single-purpose, and inelegant.  There is a maximum depth to
@@ -244,9 +249,98 @@ bool ConfigFile::IsMarked(size_t in_el) const noexcept
     return rv;
 }
 
-bool ConfigFile::Parse(const LgBufUint8& in_fc) noexcept
+
+/*!
+ * \brief                         Parses a configuration file to a vector of  array of leaf nodes
+ *                                is marked.
+ *
+ * \param[in]  in_fc              LgBufUint8 containing the buffered configuration file to
+ *                                parse.
+ * \param[in]  out_success        A mirror of the value returned via the function name.  true if
+ *                                successful, false if errors or anomalies preventing a proper
+ *                                parse.
+ * \param[in]  out_err_line       If out_success is false, the line number in the configuration file
+ *                                containing the first error.  Will be set to 0 otherwise.
+ * \param[in]  out_err_msg        If out_success is false, a string explaining the first error.
+ *                                Will be set to the empty string otherwise.
+ *
+ * \returns                       true if the parse was successful, or false otherwise.
+ *
+ * \reentrancyandthreadsafety     Not evaluated.
+ *
+ * \errorsandexceptions           No errors or exceptions are possible.
+ */
+bool ConfigFile::Parse(const LgBufUint8& in_fc, bool &out_success, size_t &out_err_line, std::string &out_err_msg) noexcept
 {
-   return true;
+   enum 
+   {
+      PsInit,
+         //Initial state, waiting for dictionary entry.
+      PsDictEntered,
+         //A dictionary was entered.
+      PsNameParsed,
+         //The name of a name:value pair has been parsed.
+      PsColonParsed,
+         //The colon of name:value pair has been parsed.
+   } parse_state = PsInit;
+                     //The major state of the parsing state machine.
+   const bool debug = true;
+      //true if more information should be written.
+   bool rv_success = false;
+      //Return value, true means success.
+   size_t rv_err_line = 0;
+      //Error line that will be returned.
+   std::string rv_err_msg = "";
+      //Error message, if any, that will be returned.
+   bool exit_flag = false;
+      //true if should exit while() loop.
+   size_t cur_line = 1;
+   size_t cur_parse_pos = 0;
+   size_t next_parse_pos = 0;
+
+   while (!exit_flag)
+   {
+      switch (parse_state)
+      {
+         case PsInit:
+         {
+            if (LgPrdpBu8ParseSpcTbNoEols(in_fc, cur_parse_pos, next_parse_pos, nullptr))
+            {
+               if (debug)
+                  std::cout << "PsInit: whitespace, start: " << cur_parse_pos << " next:" << next_parse_pos << std::endl;
+            }
+
+            exit_flag = true;
+         }
+         break;
+         case PsDictEntered:
+         {
+
+         }
+         break;
+         case PsNameParsed:
+         {
+
+         }
+         break;
+         case PsColonParsed:
+         {
+
+         }
+         break;
+         default:
+         {
+
+         }
+         break;
+      }
+   }
+
+   out_success  = rv_success;
+   out_err_line = rv_err_line;
+   out_err_msg  = rv_err_msg;
+
+   return rv_success;
 }
 
 

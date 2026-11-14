@@ -117,7 +117,7 @@ public:
    void MarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept;
    void UnmarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept;
    bool IsMarked(size_t in_el) const noexcept;
-   bool Parse(const LgBufUint8 &in_fc) noexcept;
+   bool Parse(const LgBufUint8& in_fc, bool& out_success, size_t& out_err_line, std::string& out_err_msg) noexcept;
    size_t Nelem(void) const noexcept;
    size_t Nmarked(void) const noexcept;
    void GetRecByIdx(size_t in_el, tConfigFileObjRecord &out_rec) const noexcept;

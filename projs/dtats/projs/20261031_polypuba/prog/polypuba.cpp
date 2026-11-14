@@ -57,11 +57,18 @@ static void emit_help_info(std::ostream& in_output_stream, bool in_emit_trailing
 
 void command_translate(std::ostream& in_output_stream, const LgBufUint8 &file_buffer, int argc, char* argv[])
 {
+   ConfigFile cf;
+   bool success;
+   size_t err_line;
+   std::string err_text;
+
    in_output_stream << "TRANSLATE command.\n";
    LgCppCm_FioHlineStream(in_output_stream);
 
    echo_command_line_parameters(in_output_stream, argc, argv);
 
+
+   cf.Parse(file_buffer, success, err_line, err_text);
 }
 
 

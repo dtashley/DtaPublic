@@ -78,6 +78,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>;C:\gitsbx\LibGen\src\cpp_dd\parse</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -97,6 +98,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>;C:\gitsbx\LibGen\src\cpp_dd\parse;C:\gitsbx\LibGen\src\cpp_dd\parse;C:\gitsbx\LibGen\src\cpp_dd\parse</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -113,7 +115,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\gitsbx\LibGen\src\cpp_dd\size_t;C:\gitsbx\LibGen\src\cpp_dd\memory;C:\gitsbx\LibGen\src\cpp_dd\char;C:\gitsbx\LibGen\src\cpp_cm;C:\gitsbx\LibGen\src\cpp_dd\char_array;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\gitsbx\LibGen\src\cpp_dd\size_t;C:\gitsbx\LibGen\src\cpp_dd\memory;C:\gitsbx\LibGen\src\cpp_dd\char;C:\gitsbx\LibGen\src\cpp_cm;C:\gitsbx\LibGen\src\cpp_dd\char_array;%(AdditionalIncludeDirectories);C:\gitsbx\LibGen\src\cpp_dd\parse</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -133,7 +135,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\gitsbx\LibGen\src\cpp_dd\size_t;C:\gitsbx\LibGen\src\cpp_dd\memory;C:\gitsbx\LibGen\src\cpp_dd\char;C:\gitsbx\LibGen\src\cpp_cm;C:\gitsbx\LibGen\src\cpp_dd\char_array;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\gitsbx\LibGen\src\cpp_dd\size_t;C:\gitsbx\LibGen\src\cpp_dd\memory;C:\gitsbx\LibGen\src\cpp_dd\char;C:\gitsbx\LibGen\src\cpp_cm;C:\gitsbx\LibGen\src\cpp_dd\char_array;%(AdditionalIncludeDirectories);C:\gitsbx\LibGen\src\cpp_dd\parse;C:\gitsbx\LibGen\src\cpp_dd\parse;C:\gitsbx\LibGen\src\cpp_dd\parse</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
