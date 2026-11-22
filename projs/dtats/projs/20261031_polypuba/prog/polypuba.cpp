@@ -83,9 +83,13 @@ void command_translate(std::ostream& in_output_stream, const LgBufUint8 &file_bu
    cust_lexer.Parse(file_buffer, &lex_success, lex_err_list);
 
    if (!lex_success)
+   {
       lex_err_list.EmitListToStreamText(std::cout, "Warning/Error List from Configuration File Lexical Analysis");
-
-   //cf.Parse(file_buffer, &success, lex_err_list, parse_err_list);
+   }
+   else
+   {
+      cust_lexer.EmitTokenListToStreamText(std::cout, "Test");
+   }
 }
 
 
