@@ -82,13 +82,18 @@ void command_translate(std::ostream& in_output_stream, const LgBufUint8 &file_bu
 
    cust_lexer.Parse(file_buffer, &lex_success, lex_err_list);
 
-   if (!lex_success)
+   if (lex_success)
    {
-      lex_err_list.EmitListToStreamText(std::cout, "Warning/Error List from Configuration File Lexical Analysis");
+      in_output_stream << "Lexical analysis of configuration file was successful." << std::endl;
+      LgCppCm_FioHlineStream(in_output_stream);
+      cust_lexer.EmitTokenListToStreamText(std::cout, "Configuration file lexical analysis tokens obtained:");
    }
    else
    {
-      cust_lexer.EmitTokenListToStreamText(std::cout, "Test");
+      in_output_stream << "Lexical analysis of configuration file has failed." << std::endl;
+      LgCppCm_FioHlineStream(in_output_stream);
+      cust_lexer.EmitTokenListToStreamText(in_output_stream, "Configuration file lexical analysis tokens obtained before failure:");
+      lex_err_list.EmitListToStreamText(in_output_stream, "Configuration file lexical analysis warning/error list:");
    }
 }
 
