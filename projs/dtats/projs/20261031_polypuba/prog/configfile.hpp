@@ -124,7 +124,7 @@ public:
    void MarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept;
    void UnmarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept;
    bool IsMarked(size_t in_el) const noexcept;
-   bool Parse(const LgBufUint8& in_buf, bool* out_success, LgCppDdErrlistCdA& out_lex_warnings_and_errors, LgCppDdErrlistCdA& out_parse_warnings_and_errors);
+   bool Parse(const LgCppDdParseLexCustA& in_lex_token_list, LgCppDdErrlistCdA& out_parse_warn_n_errs, bool* out_success = nullptr);
    size_t Nelem(void) const noexcept;
    size_t Nmarked(void) const noexcept;
    void GetRecByIdx(size_t in_el, tConfigFileObjRecord &out_rec) const noexcept;

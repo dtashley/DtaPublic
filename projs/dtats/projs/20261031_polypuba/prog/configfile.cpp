@@ -252,14 +252,19 @@ bool ConfigFile::IsMarked(size_t in_el) const noexcept
 
 
 /*!
- * \brief                         Parses a configuration file to a vector of  array of leaf nodes
- *                                is marked.
+ * \brief                                Parses a list of configuration file tokens to an object-internal data
+ *                                       structure consisting of an array of nesting information (enclosing
+ *                                       key names, dictionary names, array names, and array subscripts) and
+ *                                       the values.  The client can then retrieve this information via
+ *                                       separate method calls.
  *
- * \param[in]  in_fc              LgBufUint8 containing the buffered configuration file to
- *                                parse.
- * \param[in]  out_success        A mirror of the value returned via the function name.  true if
- *                                successful, false if errors or anomalies preventing a proper
- *                                parse.
+ * \param[in]     in_lex_token_list      The list of tokens to parse.
+ * \param[in,out] out_parse_warn_n_errs  The caller provides a list of warnings and errors that this
+ *                                       function will append to with any detected warnings and errors from
+ *                                       the parse.  The most normal case would be fore the caller to
+ *                                       provide an empty list.  If any warnings or errors are appended,
+ *                                       the 
+ * \param[out]    out_success            A pointer to return a bool that will be the same as
  * \param[in]  out_err_line       If out_success is false, the line number in the configuration file
  *                                containing the first error.  Will be set to 0 otherwise.
  * \param[in]  out_err_msg        If out_success is false, a string explaining the first error.
@@ -271,8 +276,11 @@ bool ConfigFile::IsMarked(size_t in_el) const noexcept
  *
  * \errorsandexceptions           No errors or exceptions are possible.
  */
-bool ConfigFile::Parse(const LgBufUint8& in_buf, bool* out_success, LgCppDdErrlistCdA& out_lex_warnings_and_errors, LgCppDdErrlistCdA& out_parse_warnings_and_errors)
+bool ConfigFile::Parse(const LgCppDdParseLexCustA& in_lex_token_list, LgCppDdErrlistCdA& out_parse_warn_n_errs, bool* out_success)
 {
+   return true;
+
+#if 0
    bool rv_success = false;
       //Return value, true means success.
    LgCppDdParseLexCustA cust_lexer;
@@ -483,6 +491,7 @@ bool ConfigFile::Parse(const LgBufUint8& in_buf, bool* out_success, LgCppDdErrli
 #endif
 
    return rv_success;
+#endif
 }
 
 
