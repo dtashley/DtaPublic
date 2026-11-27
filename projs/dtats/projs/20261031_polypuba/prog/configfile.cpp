@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-//Polypuba configuration file parser
+//Polypuba configuration file parser.
 // 
 //Parses the configuration file, stores the content, and makes it available
 //to the rest of the program.
@@ -550,31 +550,31 @@ void ConfigFile::GetRecByIdx(size_t in_el, tConfigFileObjRecord& out_rec) const 
       const auto& element = m_leaf_node_recs.at(in_el);
 
       //Copy to the caller's area.
-      out_rec.marked          = element.marked;
-      out_rec.leaf_node_depth = element.leaf_node_depth;
+      out_rec.marked                  = element.marked;
+      out_rec.n_nesting_level_records = element.n_nesting_level_records;
 
       //Assigning manually because unsure of C++ behavior, either for arrays or for
       //copies of objects within records.
       for (i = 0; i < MODULE_CONFIGFILE_CFGFILE_DEPTH_MAX; i++)
       {
-         out_rec.paths[i].m_type       = element.paths[i].m_type;
-         out_rec.paths[i].key          = element.paths[i].key;
-         out_rec.paths[i].value_string = element.paths[i].value_string;
-         out_rec.paths[i].value_int32  = element.paths[i].value_int32;
+         //out_rec.paths[i].enclosure_type    = element.paths[i].enclosure_type;
+         //out_rec.paths[i].key             = element.paths[i].key;
+         //out_rec.paths[i].value_string    = element.paths[i].value_string;
+         //out_rec.paths[i].value_int32     = element.paths[i].value_int32;
       }
    }
    else
    {
       //Zero out the caller's area.
-      out_rec.marked          = false;
-      out_rec.leaf_node_depth = 0;
+      out_rec.marked                  = false;
+      out_rec.n_nesting_level_records = 0;
 
       for (i = 0; i < MODULE_CONFIGFILE_CFGFILE_DEPTH_MAX; i++)
       {
-         out_rec.paths[i].m_type       = ConfigFileObjType::Undefined;
-         out_rec.paths[i].key          = "";
-         out_rec.paths[i].value_string = "";
-         out_rec.paths[i].value_int32  = 0;
+         //out_rec.paths[i].m_type       = ConfigFileNestLevelEnclosureType::Undefined;
+         //out_rec.paths[i].key          = "";
+         // out_rec.paths[i].value_string = "";
+         //out_rec.paths[i].value_int32  = 0;
       }
    }
 }

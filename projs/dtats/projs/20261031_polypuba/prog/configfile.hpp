@@ -38,51 +38,54 @@
 
 #include "lg_cpp_dd_buf_uint8.hpp"
 
+#include "lg_cpp_dd_parse_lex_cust_a.hpp"
 #include "lg_cpp_dd_rpt_errlst_cd_a.hpp"
 
 #define MODULE_CONFIGFILE_CFGFILE_DEPTH_MAX (5)
   //!< The maximum depth of the configuration file nesting.  Each dictionary
   //!< or array is a new level.
 
-enum class ConfigFileObjType
+
+//! As the configuration file tokens are parsed, each recorded value is associated with
+//! enclosing named dictionaries, named arrays, and keys.  This is the enclosure type
+//! for a value.
+enum class ConfigFileNestLevelEnclosureType : unsigned
 {
    Undefined,
-      //!< Unused or undefined.  This would normally occur when for unused levels
-      //!< of an array holding leaf nodes.
-   Key,
-      //!< Key only with no value.
-   KeyValPairString,
-      //!< Key-value pair, with the value represented as a string.  This means
-      //!< either that the value was double-quoted, or that the value would not
-      //!< parse as an integer.  In this case, the string field is populated
-      //!< but the integer is canonically zero.
-   KeyValPairInt,
-      //!< Key-value pair, with the value represented as an integer.  This means
-      //!< the integer was not double-quoted, and parsed successfully as a signed
-      //!< integer in the range of -2^31 to 2^31-1, inclusive.  In this case,
-      //!< the string field is the textual representation of the integer and the
-      //!< integer field is the value of the integer.
-   Dictionary,
+      //!< Unused or undefined.  This is the binary zero initialization value.
+   KeyName,
+      //!< The enclosing item is a key, which has a name.
+   DictionaryName,
+      //!< The enclosing item is a named dictionary.
+   ArrayName,
+      //!< The enclosing item is a named array.
+   ArraySubscript,
       //!< A dictionary.
-   ArrayDict
-      //!< An array of dictionaries.  An array can only contain dictionaries.
+   EnumLimit
+      //!< Not a valid value.  Defines the upper limit of the enumeration.
 };
 
-
-//!< The fundamental record representing a nesting level in a leaf node.
-struct ConfigFileNlRecord
+//!< The fundamental record representing a nesting level.
+struct ConfigFileNestingLevelRecord
 {
-   enum class ConfigFileObjType m_type {};
+   ConfigFileNestLevelEnclosureType enclosure_type{};
       //!< The type of element.
-   std::string key{};
-      //!< The key value.  This will always exist.
-   std::string value_string;
-      //!< The value.  If this is not populated, it will be the empty string.
-   int32_t value_int32{};
-      //!< The signed 32-bit integer, if the value parses as an integer.  If the m_type is ArrayDict,
-      //!< this field contains the index into the array.
+   std::string enclosure_name;
+      //!< The name of the enclosing key name, dictionary name, or array name.  If the enclosure type is
+      //! ArraySubscript, this will be the empty string.
+   size_t enclosure_array_subscript{};
+      //! If the enclosure type is ArraySubscript, this will be the array subscript, starting with [0].
+      //! For other enclosure types, this value will be 0.
 };
-typedef struct ConfigFileNlRecord tConfigFileNlRecord;
+typedef struct ConfigFileNestingLevelRecord tConfigFileNestingLevelRecord;
+
+//!< The fundamental record representing a value.
+struct ConfigFileValueRecord
+{
+   tLgCppDdParseLexCustAStruct parse_token_record{};
+      //!< The parse token.
+};
+typedef struct ConfigFileValueRecord tConfigFileValueRecord;
 
 //!< The fundamental record representing a leaf node from the configuration file.
 struct ConfigFileObjRecord
@@ -90,10 +93,12 @@ struct ConfigFileObjRecord
     bool marked{};
        //!< A boolean indicating whether the record is marked or not,
        //!< true indicates marked.
-    size_t leaf_node_depth{};
-      //!< The index of the leaf node element.
-    tConfigFileNlRecord paths[MODULE_CONFIGFILE_CFGFILE_DEPTH_MAX];
+    size_t n_nesting_level_records{};
+      //!< The number of nesting level records that are used.
+    tConfigFileNestingLevelRecord paths[MODULE_CONFIGFILE_CFGFILE_DEPTH_MAX]{};
       //!< An array specifying the components to the leaf node.
+    tConfigFileValueRecord value{};
+      //!< The value.
 };
 typedef struct ConfigFileObjRecord tConfigFileObjRecord;
 
