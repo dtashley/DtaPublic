@@ -57,7 +57,7 @@ static void emit_help_info(std::ostream& in_output_stream, bool in_emit_trailing
 }
 
 
-void command_translate(std::ostream& in_output_stream, const LgBufUint8 &file_buffer, int argc, char* argv[])
+void command_translate(std::ostream& in_output_stream, const LgBufUint8& file_buffer, int argc, char* argv[])
 {
    LgCppDdParseLexCustA cust_lexer;
       //Custom lexographic analyzer used for lexographically analyzing the configuration file.
@@ -65,8 +65,10 @@ void command_translate(std::ostream& in_output_stream, const LgBufUint8 &file_bu
       //Configuration file.
    bool success = true;
       //true if operations so far are successful.
-   bool lex_success;
+   bool lex_success = false;
       //Success or failure from the lexographic analyzer.
+   bool parse_success = false;
+      //Success or failure from parsing.
    std::string err_text;
       //Is this used?
    LgCppDdErrlistCdA lex_err_list;
@@ -94,6 +96,11 @@ void command_translate(std::ostream& in_output_stream, const LgBufUint8 &file_bu
       LgCppCm_FioHlineStream(in_output_stream);
       cust_lexer.EmitTokenListToStreamText(in_output_stream, "Configuration file lexical analysis tokens obtained before failure:");
       lex_err_list.EmitListToStreamText(in_output_stream, "Configuration file lexical analysis warning/error list:");
+   }
+
+   if (lex_success)
+   {
+      parse_success = cf.Parse(file_buffer, cust_lexer, parse_err_list);
    }
 }
 

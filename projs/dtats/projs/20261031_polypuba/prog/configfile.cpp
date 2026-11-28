@@ -81,7 +81,7 @@ ConfigFile::~ConfigFile() noexcept
  */
 void ConfigFile::MarkAll(void) noexcept
 {
-   for (auto& element : m_leaf_node_recs)
+   for (auto& element : m_value_recs)
    {
       element.marked = true;
    }
@@ -97,7 +97,7 @@ void ConfigFile::MarkAll(void) noexcept
  */
 void ConfigFile::UnmarkAll(void) noexcept
 {
-   for (auto& element : m_leaf_node_recs)
+   for (auto& element : m_value_recs)
    {
       element.marked = false;
    }
@@ -116,9 +116,9 @@ void ConfigFile::UnmarkAll(void) noexcept
  */
 void ConfigFile::MarkOne(size_t in_el_to_mark) noexcept
 {
-   if (in_el_to_mark < m_leaf_node_recs.size())
+   if (in_el_to_mark < m_value_recs.size())
    {
-      m_leaf_node_recs.at(in_el_to_mark).marked = true;
+      m_value_recs.at(in_el_to_mark).marked = true;
    }
    else
    {
@@ -139,9 +139,9 @@ void ConfigFile::MarkOne(size_t in_el_to_mark) noexcept
  */
 void ConfigFile::UnmarkOne(size_t in_el_to_unmark) noexcept
 {
-   if (in_el_to_unmark < m_leaf_node_recs.size())
+   if (in_el_to_unmark < m_value_recs.size())
    {
-      m_leaf_node_recs.at(in_el_to_unmark).marked = false;
+      m_value_recs.at(in_el_to_unmark).marked = false;
    }
    else
    {
@@ -168,7 +168,7 @@ void ConfigFile::MarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept
    size_t nelem;
    size_t i;
 
-   nelem = m_leaf_node_recs.size();
+   nelem = m_value_recs.size();
 
    if (in_el_0 < nelem)  //Can't proceed if starting element is too large.
    {
@@ -180,7 +180,7 @@ void ConfigFile::MarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept
       //Mark the range.
       for (i = in_el_0; i < in_el_n_plus_one; i++)
       {
-         m_leaf_node_recs.at(i).marked = true;
+         m_value_recs.at(i).marked = true;
       }
    }
 }
@@ -204,7 +204,7 @@ void ConfigFile::UnmarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept
     size_t nelem;
     size_t i;
 
-    nelem = m_leaf_node_recs.size();
+    nelem = m_value_recs.size();
 
     if (in_el_0 < nelem)  //Can't proceed if starting element is too large.
     {
@@ -216,7 +216,7 @@ void ConfigFile::UnmarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept
         //Mark the range.
         for (i = in_el_0; i < in_el_n_plus_one; i++)
         {
-            m_leaf_node_recs.at(i).marked = false;
+           m_value_recs.at(i).marked = false;
         }
     }
 }
@@ -238,9 +238,9 @@ bool ConfigFile::IsMarked(size_t in_el) const noexcept
 {
     bool rv;
 
-    if (in_el < m_leaf_node_recs.size())
+    if (in_el < m_value_recs.size())
     {
-        rv = m_leaf_node_recs.at(in_el).marked;
+        rv = m_value_recs.at(in_el).marked;
     }
     else
     {
@@ -261,36 +261,27 @@ bool ConfigFile::IsMarked(size_t in_el) const noexcept
  * \param[in]     in_lex_token_list      The list of tokens to parse.
  * \param[in,out] out_parse_warn_n_errs  The caller provides a list of warnings and errors that this
  *                                       function will append to with any detected warnings and errors from
- *                                       the parse.  The most normal case would be fore the caller to
+ *                                       the parse.  The most normal case would be for the caller to
  *                                       provide an empty list.  If any warnings or errors are appended,
- *                                       the 
- * \param[out]    out_success            A pointer to return a bool that will be the same as
- * \param[in]  out_err_line       If out_success is false, the line number in the configuration file
- *                                containing the first error.  Will be set to 0 otherwise.
- * \param[in]  out_err_msg        If out_success is false, a string explaining the first error.
- *                                Will be set to the empty string otherwise.
+ *                                       the success code (both the function's return value and *out_success)
+ *                                       will be false.  At the present time, there are no warnings, and
+ *                                       every detected anomaly will prevent parsing.
+ * \param[out]    out_success            A pointer to return a bool that will be the same as the function's
+ *                                       return value.  This pointer may legitimately be nullptr, in which
+ *                                       case the pointer won't be dereferenced.
  *
- * \returns                       true if the parse was successful, or false otherwise.
+ * \returns                              true if the parse was successful, or false otherwise.
  *
- * \reentrancyandthreadsafety     Not evaluated.
+ * \reentrancyandthreadsafety            Not evaluated.
  *
- * \errorsandexceptions           No errors or exceptions are possible.
+ * \errorsandexceptions                  Errors or exceptions due to out of memory are possible.
  */
-bool ConfigFile::Parse(const LgCppDdParseLexCustA& in_lex_token_list, LgCppDdErrlistCdA& out_parse_warn_n_errs, bool* out_success)
+bool ConfigFile::Parse(const LgBufUint8& in_buf, const LgCppDdParseLexCustA& in_lex_token_list, LgCppDdErrlistCdA& out_parse_warn_n_errs, bool* out_success)
 {
-   return true;
-
-#if 0
-   bool rv_success = false;
+   constexpr bool debug = true;
+      //true if more information should be written.
+   bool rv_success = true;
       //Return value, true means success.
-   LgCppDdParseLexCustA cust_lexer;
-      //Custom lexographic analyzer.
-   bool lex_success;
-      //Success or failure from the lexographic analyzer.
-
-   cust_lexer.Parse(in_buf, &lex_success, out_lex_warnings_and_errors);
-
-#if 0
    enum 
    {
       PsInit,
@@ -303,10 +294,114 @@ bool ConfigFile::Parse(const LgCppDdParseLexCustA& in_lex_token_list, LgCppDdErr
          //The colon of name:value pair has been parsed.
    } parse_state = PsInit;
                      //The major state of the parsing state machine.
-   const bool debug = true;
-      //true if more information should be written.
+   bool completion_exit_flag = false;
+      //Set to true if there is a normal completion and the while() loop should
+      //exit.
+   bool error_exit_flag = false;
+      //Set to true if an error is encountered.  All errors will result in
+      //deleting the vector stack of values parsed, so that there is no possibility
+      //of using an incomplete result.
+   size_t cur_token_idx = 0;
+      //The index of the lexical analysis token currently being examined.
+   tLgCppDdParseLexCustAStruct cur_token;
+      //The token currently being examined.
+   size_t n_tokens = 0;
+      //Number of tokens.
+
+   if (debug)
+      std::cout << "ConfigFile::Parse() entry." << std::endl;
+
+   n_tokens = in_lex_token_list.Ntokens();
+
+   while ((!completion_exit_flag) && (!error_exit_flag))
+   {
+      //Load a token.  Member function correctly handles invalid index.
+      in_lex_token_list.GetTokenCopy(cur_token_idx, cur_token);
+
+      switch (parse_state)
+      {
+         case PsInit:
+            if (debug)
+               std::cout << "ConfigFile::Parse(), in state PsInit." << std::endl;
+
+            if (cur_token_idx >= n_tokens)
+            {
+               //Ran out of tokens.  Not good.
+               out_parse_warn_n_errs.AppendFull(
+                                                  in_buf,
+                                                  "",
+                                                  "",
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  LgCppDdErrlistCdASeverity::High,
+                                                  "",
+                                                  "",
+                                                  "Prematurely exhausted tokens."
+                                               );
+               error_exit_flag = true;
+            }
+            else if (cur_token.tokentype == LgCppDdParseCustLexATokenType::BraceLeft)
+            {
+               //Token as expected.
+               cur_token_idx++;
+               parse_state = PsDictEntered;
+            }
+            else
+            {
+               //In this state, there is only one type of token to progress.  It was not found.
+               out_parse_warn_n_errs.AppendFull(
+                                                  in_buf,
+                                                  "",
+                                                  "",
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  LgCppDdErrlistCdASeverity::High,
+                                                  "",
+                                                  "",
+                                                  "Unable to progress."
+                                               );
+            }
+            break;
+         case PsDictEntered:
+            if (debug)
+               std::cout << "ConfigFile::Parse(), in state PsDictEntered." << std::endl;
+            completion_exit_flag = true;
+            break;
+         case PsNameParsed:
+            if (debug)
+               std::cout << "ConfigFile::Parse(), in state PsNameParsed." << std::endl;
+            completion_exit_flag = true;
+            break;
+         case PsColonParsed:
+            if (debug)
+               std::cout << "ConfigFile::Parse(), in state PsColonParsed." << std::endl;
+            completion_exit_flag = true;
+            break;
+         default:
+            completion_exit_flag = true;
+            break;
+      }
+   }
+
+   //Assign the pass-by-reference value.
+   if (out_success)
+      *out_success = rv_success;
+ 
+   return rv_success;
+
+#if 0
    bool rv_success = false;
       //Return value, true means success.
+   LgCppDdParseLexCustA cust_lexer;
+      //Custom lexographic analyzer.
+   bool lex_success;
+      //Success or failure from the lexographic analyzer.
+
+   cust_lexer.Parse(in_buf, &lex_success, out_lex_warnings_and_errors);
+
+#if 0
    size_t rv_err_line = 0;
       //Error line that will be returned.
    std::string rv_err_msg = "";
@@ -506,7 +601,7 @@ size_t ConfigFile::Nelem(void) const noexcept
 {
    size_t rv;
 
-   rv = m_leaf_node_recs.size();
+   rv = m_value_recs.size();
 
    return rv;
 }
@@ -525,7 +620,7 @@ size_t ConfigFile::Nmarked(void) const noexcept
 {
     size_t rv = 0;
 
-    for (const auto& element : m_leaf_node_recs)
+    for (const auto& element : m_value_recs)
     {
        if (element.marked)
           rv++;
@@ -553,10 +648,10 @@ void ConfigFile::GetRecByIdx(size_t in_el, tConfigFileObjRecord& out_rec) const 
 {
     size_t i;
 
-    if (in_el < m_leaf_node_recs.size())
+    if (in_el < m_value_recs.size())
    {
       //Grab a reference.
-      const auto& element = m_leaf_node_recs.at(in_el);
+      const auto& element = m_value_recs.at(in_el);
 
       //Copy to the caller's area.
       out_rec.marked                  = element.marked;

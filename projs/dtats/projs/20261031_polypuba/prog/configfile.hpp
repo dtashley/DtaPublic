@@ -112,7 +112,7 @@ private:
 #else
 public:
 #endif
-    std::vector<tConfigFileObjRecord> m_leaf_node_recs;
+    std::vector<tConfigFileObjRecord> m_value_recs;
        //!< The array of records, one per leaf node.
 public:
    ConfigFile() noexcept;
@@ -124,7 +124,7 @@ public:
    void MarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept;
    void UnmarkRange(size_t in_el_0, size_t in_el_n_plus_one) noexcept;
    bool IsMarked(size_t in_el) const noexcept;
-   bool Parse(const LgCppDdParseLexCustA& in_lex_token_list, LgCppDdErrlistCdA& out_parse_warn_n_errs, bool* out_success = nullptr);
+   bool Parse(const LgBufUint8& in_buf, const LgCppDdParseLexCustA& in_lex_token_list, LgCppDdErrlistCdA& out_parse_warn_n_errs, bool* out_success = nullptr);
    size_t Nelem(void) const noexcept;
    size_t Nmarked(void) const noexcept;
    void GetRecByIdx(size_t in_el, tConfigFileObjRecord &out_rec) const noexcept;
